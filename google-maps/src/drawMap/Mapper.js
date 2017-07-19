@@ -1,59 +1,108 @@
 import React from 'react';
 import { findDOMNode } from 'react-dom';
 import { getMyLocation } from './mapUtils';
+import { saveDefaultLocation } from './persistence';
+
+import getMap from './googleMap';
+import LandMarker from './LandMarker';
+import Marker from './Marker';
 
 
 class Mapper extends React.Component {
 
   constructor(props) {
+
     super(props);
 
     this.style = {
       height:600,
-      width:'100%'
+      width:'100%',
+      display:'flexbox'
     }
     this.map = null;
-    this.markers = [];
     this.state = {
+      landmarks: []
     };
   }
 
   componentDidMount() {
-    this.map = new window.google.maps.Map(findDOMNode(this.mapDomElement), {
-      zoom: 15,
-      center: new window.google.maps.LatLng(37.769, -122.446),
-      mapTypeId: window.google.maps.MapTypeId.ROADMAP
-    });
 
     getMyLocation().then((position) => {
+      var saveTimer = 0;
+      this.map = getMap(findDOMNode(this.mapDomElement));
       this.map.setCenter(position);
-    })
+      this.landMarker = new LandMarker(this.map);
+      this.setState({landmarks: this.landMarker.getLandmarks()});
 
-    this.map.addListener('click', (ev) => {
-      console.log('click', ev);
-      this.addMarker(ev.latLng);
-    })
-  }
+      this.map.addListener('click', (ev) => {
+        //console.log('click', ev.latLng.lat(), ev.latLng.lng());
+        //this.addMarker(ev.latLng);
+        this.landMarker.addMarker(ev.latLng, 'New Landmark', true);
+        this.setState({landmarks: this.landMarker.getLandmarks()});
+      });
 
-  addMarker(location) { // location must be object {lat, long}
-    let newMarker = new window.google.maps.Marker({
-      position:location,
-      map: this.map,
-      title: 'New Marker'
+      this.map.addListener('center_changed', (ev) => {
+        if (saveTimer) {
+          clearTimeout(saveTimer);
+          saveTimer = 0;
+        }
+        saveTimer = setTimeout(() => {
+          saveDefaultLocation({
+            lat:this.map.getCenter().lat(),
+            lng:this.map.getCenter().lng()
+          });
+          saveTimer = 0; //clear
+        }, 3000);
+      });
     });
-    this.markers.push(newMarker);
-    console.log(this.markers, location);
-    //this.assignMarkersToMap(this.markers, this.map);
   }
 
-  assignMarkersToMap(markers, map) {
-    markers.forEach(m => m.setMap(map));
+  deleteMarker(marker) {
+    this.landMarker.deleteMarker(marker);
+    this.setState({landmarks: this.landMarker.getLandmarks()});
   }
+
+  changeMarkerTitle(marker, newTitle) {
+    this.landMarker.changeMarkerTitle(marker, newTitle);
+    this.setState({landmarks: this.landMarker.getLandmarks()});
+  }
+
 
   render() {
-    return (<div id="maps" style={this.style}
-      ref={ (domElem) => this.mapDomElement = domElem }>
-    </div>)
+    return (
+      <div style={{display:'flex'}}>
+
+        <div id="maps" style={this.style}
+          ref={ (domElem) => this.mapDomElement = domElem }>
+        </div>
+
+        <div style={{display:'flexbox'}}>
+        <ul>
+        {
+          this.state.landmarks.map((lm, index) => <Marker
+            key={lm.id}
+            id={lm.id}
+            index={index}
+            title={lm.marker.getTitle()}
+            hideHandler={() => {
+              ((m) => this.landMarker.hideMarker(m))(lm.marker);
+            }}
+            showHandler={() => {
+              ((m) => this.landMarker.showMarker(m))(lm.marker);
+            }}
+            deleteHandler={() => {
+              ((m) => this.deleteMarker(m))(lm.marker);
+            }}
+            titleChangeHandler={(event) => {
+              ((m) => this.changeMarkerTitle(m, event.target.value))(lm.marker);
+            }}
+          />)
+        }
+        </ul>
+        </div>
+
+      </div>
+    )
   }
 }
 
