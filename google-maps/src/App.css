@@ -22,3 +22,12 @@
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+
+input {
+  border:0px solid grey;
+  background-color:transparent;
+}
+input:focus {
+  border:0px solid grey;
+  background-color:#ffffff;
+}

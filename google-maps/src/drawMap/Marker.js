@@ -1,15 +1,16 @@
 import React from 'react';
 
 function Marker(props) {
+  const style={
+    backgroundColor: (props.selected ? '#ffe0a7' : 'transparent')
+  }
   return(
-    <li>
+    <div style={style} onClick={props.selectionHandler}>
       <span>{props.index}. </span>
-      <span>{props.title}</span>
       <input type="text" value={props.title} onChange={props.titleChangeHandler} />
-      <a href="#" onClick={props.hideHandler}>Hide </a>
-      <a href="#" onClick={props.showHandler}>Show </a>
-      <a href="#" onClick={props.deleteHandler}>Delete </a>
-    </li>
+      <button onClick={props.toggleHandler}>Toggle</button>
+      <button onClick={props.deleteHandler}>Delete</button>
+    </div>
   )
 }
 
