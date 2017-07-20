@@ -12,47 +12,37 @@ function markerIsAtLocation(clickPosition, location) {
   );
 }
 
-
 const normalIcon = 'http://maps.google.com/mapfiles/ms/icons/red-dot.png';
 const selectedIcon = 'http://maps.google.com/mapfiles/ms/icons/green-dot.png';
 
-class LandMarker {
+class Landmark {
 
   constructor(map, viewStateRefresher) {
 
-    this.googleMap = map;
     this.landmarks = [];
+    this.perimeter = null;
     this.viewStateRefresher = viewStateRefresher;
     const saved = loadLandmarks();
     if (saved && saved.length) {
       saved.forEach(location => {
         console.log(location.lat, location.lng);
-        this.addMarker(new window.google.maps.LatLng(location.lat, location.lng), location.title, false);
+        this.addMarker(map, new window.google.maps.LatLng(location.lat, location.lng), location.title, false);
       });
     }
-    this.setBounds();
+    this.setBounds(map);
+    this.showPerimeter(map);
     this.viewStateRefresher(this.landmarks);
   }
-
-  /*
-  var markers = [];//some array
-  var bounds = new google.maps.LatLngBounds();
-  for (var i = 0; i < markers.length; i++) {
-   bounds.extend(markers[i].getPosition());
-  }
-
-  map.fitBounds(bounds);
-  */
 
   getLandmarks() {
     return this.landmarks;
   }
 
-  addMarker(location, title, persist = true) { // location must be object {lat, lng}
+  addMarker(map, location, title, persist = true) { // location must be object {lat, lng}
 
     let newMarker = new window.google.maps.Marker({
       position:location,
-      map: this.googleMap,
+      map: map,
       draggable:true,
       label: title,
       title: title,
@@ -62,6 +52,7 @@ class LandMarker {
     newMarker.addListener('dragend', (ev) => {
       // console.log(ev.latLng.lat(), ev.latLng.lng());
       this.landmarks.forEach(lm => lm.location = lm.marker.getPosition());
+      this.showPerimeter(map);
       save(this.landmarks);
     });
 
@@ -85,19 +76,15 @@ class LandMarker {
     if (persist) {
       save(this.landmarks);
     }
-
+    this.showPerimeter(map);
     this.viewStateRefresher(this.landmarks);
   }
 
-  assignMarkersToMap(gMap) {
-    this.landmarks.map(lm => lm.marker).forEach(m => m.setMap(gMap));
-  }
-
-  toggleMarker(marker) {
+  toggleMarker(marker, map) {
     if (marker.getMap()) {
       this.hideMarker(marker);
     } else {
-      this.showMarker(marker);
+      this.showMarker(marker, map);
     }
   }
 
@@ -105,15 +92,18 @@ class LandMarker {
     marker.setMap(null);
   }
 
-  showMarker(marker) {
-    marker.setMap(this.googleMap);
+  showMarker(marker, map) {
+    console.log('showMarker', map);
+    marker.setMap(map);
   }
 
-  deleteMarker(marker) {
+  deleteMarker(marker, map) {
+    console.log(map);
     this.hideMarker(marker);
     this.landmarks = this.landmarks.filter(lm => !markerIsAtLocation(marker.position, lm.location));
     //lm.location.lat() !== marker.position.lat() && lm.location.lng() !== marker.position.lng());
     save(this.landmarks);
+    this.showPerimeter(map);
     this.viewStateRefresher(this.landmarks);
   }
 
@@ -126,6 +116,28 @@ class LandMarker {
     this.viewStateRefresher(this.landmarks);
   }
 
+  moveMarkerUp(index, map) {
+    const toIndex = index - 1;
+    if (toIndex >= 0) {
+      [this.landmarks[index], this.landmarks[toIndex]] = [this.landmarks[toIndex], this.landmarks[index]];
+      save(this.landmarks);
+      this.showPerimeter(map);
+      this.viewStateRefresher(this.landmarks);
+    }
+    //lm.location.lat() !== marker.position.lat() && lm.location.lng() !== marker.position.lng());
+  }
+
+  moveMarkerDown(index, map) {
+    const toIndex = index + 1;
+    if (toIndex < this.landmarks.length) {
+      [this.landmarks[index], this.landmarks[toIndex]] = [this.landmarks[toIndex], this.landmarks[index]];
+      save(this.landmarks);
+      this.showPerimeter(map);
+      this.viewStateRefresher(this.landmarks);
+    }
+    //lm.location.lat() !== marker.position.lat() && lm.location.lng() !== marker.position.lng());
+  }
+
   changeMarkerTitle(marker, newTitle) {
     marker.setTitle(newTitle);
     marker.setLabel(newTitle);
@@ -133,14 +145,31 @@ class LandMarker {
     this.viewStateRefresher(this.landmarks);
   }
 
-  setBounds() {
+  setBounds(map) {
     let bounds = new window.google.maps.LatLngBounds();
     this.landmarks.forEach(lm => bounds.extend(lm.marker.getPosition()));
-    this.googleMap.fitBounds(bounds);
+    map.fitBounds(bounds);
+  }
+
+  showPerimeter(map) {
+    const perimeterPoints = this.landmarks.map(lm => ({lat:lm.marker.position.lat(), lng: lm.marker.position.lng()}));
+    if (this.perimeter) {
+      this.perimeter.setMap(null);
+    }
+    this.perimeter = new window.google.maps.Polygon({
+          path: perimeterPoints,
+          strokeColor: '#0099AA',
+          strokeOpacity: 0.8,
+          strokeWeight: 2,
+          fillColor: '#EEEE00',
+          fillOpacity: 0.35
+        });
+
+    this.perimeter.setMap(map);
   }
 
 }
 
 
 
-export default LandMarker;
+export default Landmark;
