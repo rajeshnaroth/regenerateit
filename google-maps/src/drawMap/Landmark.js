@@ -38,7 +38,7 @@ class Landmark {
     return this.landmarks;
   }
 
-  addMarker(map, location, title, persist = true) { // location must be object {lat, lng}
+  addMarker(map, location, title, insertNew = true) { // location must be object {lat, lng}
 
     let newMarker = new window.google.maps.Marker({
       position:location,
@@ -66,16 +66,59 @@ class Landmark {
       this.selectMarkerAt(ev.latLng);
     });
 
-    this.landmarks.push({
-      id: (new Date()).getTime(),
-      selected: false,
-      location: location,
-      marker: newMarker
+    newMarker.addListener('dblclick', (ev) => {
+      //console.log('click', ev, ev.latLng.lat(), ev.latLng.lng());
+      this.landmarks.forEach(lm => {
+        if (markerIsAtLocation(ev.latLng, lm.location)) {
+          this.deleteMarker(lm.marker, map);
+        }
+      });
     });
 
-    if (persist) {
+    if (insertNew) {
+      const midpoints = this.landmarks.map((lm, i, lmArray) => {
+        const index1 = i;
+        const index2 = (i + 1) % lmArray.length;
+        const newLat = (lm.marker.getPosition().lat() + lmArray[index2].marker.getPosition().lat()) / 2;
+        const newLng = (lm.marker.getPosition().lng() + lmArray[index2].marker.getPosition().lng()) / 2;
+
+        return {
+          indices:[index1, index2],
+          position: new window.google.maps.LatLng(newLat, newLng)
+        }
+      });
+
+      const nearest = midpoints.reduce((accum, mp) => {
+        const distance = window.google.maps.geometry.spherical.computeDistanceBetween(newMarker.getPosition(), mp.position);
+        // console.log(accum.index, mp.indices[0], distance);
+        if (accum.index === -1) { // first one
+          return {index: mp.indices[0], distance: distance};
+        } else {
+          if (distance < accum.distance) {
+            return {index: mp.indices[0], distance: distance};
+          } else {
+            return accum;
+          }
+        }
+      }, {index: -1, distance: 0});
+
+      // console.log(nearest);
+      this.landmarks.splice(nearest.index + 1, 0, {
+        id: (new Date()).getTime(),
+        selected: false,
+        location: location,
+        marker: newMarker
+      });
       save(this.landmarks);
+    } else {
+      this.landmarks.push({
+        id: (new Date()).getTime(),
+        selected: false,
+        location: location,
+        marker: newMarker
+      });
     }
+
     this.showPerimeter(map);
     this.viewStateRefresher(this.landmarks);
   }
@@ -152,11 +195,12 @@ class Landmark {
   }
 
   showPerimeter(map) {
-    const perimeterPoints = this.landmarks.map(lm => ({lat:lm.marker.position.lat(), lng: lm.marker.position.lng()}));
+    let perimeterPoints = this.landmarks.map(lm => ({lat:lm.marker.position.lat(), lng: lm.marker.position.lng()}));
+    perimeterPoints.push(perimeterPoints[0]);
     if (this.perimeter) {
       this.perimeter.setMap(null);
     }
-    this.perimeter = new window.google.maps.Polygon({
+    this.perimeter = new window.google.maps.Polyline({
           path: perimeterPoints,
           strokeColor: '#0099AA',
           strokeOpacity: 0.8,

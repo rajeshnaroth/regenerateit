@@ -37,7 +37,7 @@ class Mapper extends React.Component {
 
       this.map.addListener('click', (ev) => {
         //console.log('click', ev.latLng.lat(), ev.latLng.lng());
-        this.landMark.addMarker(this.map, ev.latLng, 'New Landmark', true);
+        this.landMark.addMarker(this.map, ev.latLng, '', true);
       });
 
       this.map.addListener('center_changed', (ev) => {
@@ -82,7 +82,7 @@ class Mapper extends React.Component {
 
         <div style={{display:'flexbox'}}>
         <button onClick={() => {
-          if (this.landMark) this.landMark.setBounds();
+          if (this.landMark) this.landMark.setBounds(this.map);
         }}>Zoom to view</button>
         <section>
         {
