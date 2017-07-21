@@ -1,5 +1,5 @@
+/* global localStorage */
 function loadLandmarks() {
-
   try {
     return JSON.parse(localStorage.getItem('landmarks'));
   } catch (error) {
@@ -8,12 +8,10 @@ function loadLandmarks() {
 }
 
 function saveLandmarks(toSave) {
-
   localStorage.setItem('landmarks', JSON.stringify(toSave));
 }
 
 function loadDefaultLocation() {
-
   try {
     return JSON.parse(localStorage.getItem('defaultLocation'));
   } catch (error) {
@@ -22,9 +20,8 @@ function loadDefaultLocation() {
 }
 
 function saveDefaultLocation(location) {
-
   localStorage.setItem('defaultLocation', JSON.stringify(location));
   console.log('saving location', location);
 }
 
-export { loadLandmarks, saveLandmarks, loadDefaultLocation, saveDefaultLocation }
+export { loadLandmarks, saveLandmarks, loadDefaultLocation, saveDefaultLocation };
