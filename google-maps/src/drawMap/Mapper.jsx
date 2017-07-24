@@ -3,10 +3,9 @@ import { findDOMNode } from 'react-dom';
 import { getMap, getMyLocation } from './mapUtils';
 import { saveDefaultLocation } from './persistence';
 import Landmark from './Landmark';
-import Marker from './Marker';
+import Marker from './Marker.jsx';
 
 class Mapper extends React.Component {
-
   constructor(props) {
     super(props);
 
@@ -35,7 +34,12 @@ class Mapper extends React.Component {
 
       this.map.addListener('click', (ev) => {
         // console.log('click', ev.latLng.lat(), ev.latLng.lng());
-        this.landMark.addMarker(this.map, ev.latLng, '', true);
+        this.landMark.addMarker({
+          map: this.map,
+          location: ev.latLng,
+          title: '',
+          component: this,
+        }, true);
       });
 
       this.map.addListener('center_changed', () => {
@@ -64,9 +68,7 @@ class Mapper extends React.Component {
           ref={(domElem) => { this.mapDomElement = domElem; }}
         />
 
-        <div
-          style={{ display: 'flexbox' }}
-        >
+        <div style={{ display: 'flexbox' }} >
           <button
             onClick={() => {
               if (this.landMark) this.landMark.setBounds(this.map);
@@ -81,12 +83,13 @@ class Mapper extends React.Component {
                 id={lm.id}
                 index={index}
                 title={lm.marker.getTitle()}
+                show={lm.marker.getMap() !== null}
                 selected={lm.selected}
                 selectionHandler={() => {
                   (m => this.landMark.selectMarkerAt(m.getPosition()))(lm.marker);
                 }}
                 toggleHandler={() => {
-                  ((m, map) => Landmark.toggleMarker(m, map))(lm.marker, this.map);
+                  ((m, map) => this.landMark.toggleMarker(m, map))(lm.marker, this.map);
                 }}
                 deleteHandler={() => {
                   ((m, map) => this.landMark.deleteMarker(m, map))(lm.marker, this.map);

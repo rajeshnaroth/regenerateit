@@ -2,9 +2,20 @@
   "extends": "airbnb",
   "rules": {
     "jsx-a11y/href-no-hash": "off",
-    "react/jsx-filename-extension": [1, {
-      "extensions": [".js", ".jsx"]
-    }],
+    "react/jsx-filename-extension": [
+      1,
+      {
+        "extensions": [ ".js", ".jsx" ]
+      }
+    ],
+    'import/extensions': [
+      'error',
+      'always',
+      {
+        js: 'never',
+        jsx: 'always',
+      }
+    ],
     max-len: [1, 120]
   }
 }

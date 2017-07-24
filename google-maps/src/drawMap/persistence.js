@@ -8,6 +8,7 @@ function loadLandmarks() {
 }
 
 function saveLandmarks(toSave) {
+  console.log('saving landmarks');
   localStorage.setItem('landmarks', JSON.stringify(toSave));
 }
 
@@ -20,8 +21,8 @@ function loadDefaultLocation() {
 }
 
 function saveDefaultLocation(location) {
-  localStorage.setItem('defaultLocation', JSON.stringify(location));
   console.log('saving location', location);
+  localStorage.setItem('defaultLocation', JSON.stringify(location));
 }
 
 export { loadLandmarks, saveLandmarks, loadDefaultLocation, saveDefaultLocation };
