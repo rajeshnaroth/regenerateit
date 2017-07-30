@@ -1,0 +1,20 @@
+{
+    "en": {
+        "app.name": "RegenerateIT",
+        "app.tagline": "Small Farm Management Platform",
+        "app.logline": "Cultivating Old and New Farming Technology",
+        "app.description": "Cultivating Old and New Farming Technology effectively combining regenerative farming methods utilized prior to 1950 with modern business technologies to be profitable now and into the future."
+    },
+    "fr": {
+        "app.name": "RegenerateIT",
+        "app.tagline": "Plateforme de gestion des petites exploitations agricoles",
+        "app.logline": "Cultivating Old and New Farming Technology",
+        "app.description": "Cultiver la technologie de l'agriculture ancienne et nouvelle en utilisant des méthodes d'élevage en régénération utilisées avant 1950 avec des technologies commerciales modernes qui doivent être rentables dès maintenant."
+    },
+    "es": {
+        "app.name": "RegenerateIT",
+        "app.tagline": "Small Farm Management Platform",
+        "app.logline": "Cultivating Old and New Farming Technology",
+        "app.description": "Utilizing regenerative farming methods utilized prior to 1950 with modern business technologies required to be profitable now and into the future."
+    }
+}
