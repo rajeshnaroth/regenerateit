@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 
 function NavigationMenu() {
   return (
-    <div style={{ padding: '1em', width: '30em' }}>
+    <div style={{ padding: '1em' }}>
       <ListGroup>
         <ListGroupItemHeading>List group item heading</ListGroupItemHeading>
 

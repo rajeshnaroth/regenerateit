@@ -4,6 +4,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { IntlProvider } from 'react-intl';
 import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap/scss/bootstrap-reboot.scss';
+// import 'bootstrap/scss/bootstrap-grid.scss';
+// import 'bootstrap/scss/bootstrap.scss';
 
 import getLocaleTransition from './utils/getLocaleTranslatons';
 import App from './App.jsx';

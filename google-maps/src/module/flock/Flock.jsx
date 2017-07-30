@@ -1,11 +1,21 @@
 import React from 'react';
-// import NoFlock from './NoFlock.jsx';
+import {
+  Container,
+  Jumbotron,
+} from 'reactstrap';
+
+import FlockList from './FlockList.jsx';
+import FlockForm from './FlockForm.jsx';
 // import FlockForm from './FlockForm.jsx';
 
 const Flock = () => (
-  <div>
-    <h3>Flock</h3>
-  </div>
+  <Jumbotron>
+    <Container>
+      <h2>Flock</h2>
+      <FlockList />
+      <FlockForm />
+    </Container>
+  </Jumbotron>
 );
 
 export default Flock;
