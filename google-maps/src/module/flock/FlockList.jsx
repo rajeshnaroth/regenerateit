@@ -31,16 +31,14 @@ class FlockList extends React.Component {
             </thead>
             <tbody>
               {
-                this.state.flocks.map((flock, index) => {
-                  return (
-                    <tr>
-                      <th scope="row">{index}</th>
-                      <td>{flock.flockName}</td>
-                      <td>{flock.flockVertical}</td>
-                      <td>{flock.flockSize}</td>
-                    </tr>
-                  );
-                })
+                this.state.flocks.map((flock, index) => (
+                  <tr>
+                    <th scope="row">{index}</th>
+                    <td>{flock.flockName}</td>
+                    <td>{flock.flockVertical}</td>
+                    <td>{flock.flockSize}</td>
+                  </tr>
+                ))
               }
             </tbody>
           </Table>

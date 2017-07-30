@@ -80,7 +80,7 @@ class FlockForm extends React.Component {
             <FormGroup>
               <Button
                 color="primary"
-                onClick={ this.addNewFlock }
+                onClick={this.addNewFlock}
               >Add New Flock</Button>
               <Button onClick={() => { this.setState({ isEditMode: false }); }}>Cancel</Button>
             </FormGroup>
