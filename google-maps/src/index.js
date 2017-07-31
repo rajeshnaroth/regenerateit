@@ -8,10 +8,13 @@ import 'bootstrap/dist/css/bootstrap.css';
 // import 'bootstrap/scss/bootstrap-grid.scss';
 // import 'bootstrap/scss/bootstrap.scss';
 
+import configureStore from './utils/configureStore';
 import getLocaleTransition from './utils/getLocaleTranslatons';
-import App from './App.jsx';
-import registerServiceWorker from './registerServiceWorker';
+import registerServiceWorker from './utils/registerServiceWorker';
+import App from './app/App.jsx';
 import './index.css';
+
+const store = configureStore();
 
 window.initMap = function initMap() {
   // console.log('initMap');
@@ -19,7 +22,7 @@ window.initMap = function initMap() {
   getLocaleTransition((messages, languageWithoutRegionCode) => {
     ReactDOM.render(
       <IntlProvider locale={languageWithoutRegionCode} messages={messages}>
-        <App />
+        <App store={store} />
       </IntlProvider>, document.getElementById('root'));
     registerServiceWorker();
   });

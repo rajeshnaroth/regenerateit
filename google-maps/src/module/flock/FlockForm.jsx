@@ -18,6 +18,7 @@ class FlockForm extends React.Component {
       flockVertical: 'Grassfed Beef',
       flockSize: 1,
     };
+    this.addNewFlock = this.addNewFlock.bind(this);
   }
 
   handleChange(name, value) {
