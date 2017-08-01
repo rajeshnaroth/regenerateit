@@ -9,7 +9,7 @@
         "extensions": [ ".js", ".jsx" ]
       }
     ],
-    'import/extensions': [
+    "import/extensions": [
       'error',
       'always',
       {
@@ -17,6 +17,7 @@
         jsx: 'always',
       }
     ],
-    max-len: [1, 120]
+    "max-len": [1, 120],
+    "arrow-parens": ["error", "always"]
   }
 }

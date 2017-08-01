@@ -11,7 +11,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import configureStore from './utils/configureStore';
 import getLocaleTransition from './utils/getLocaleTranslatons';
 import registerServiceWorker from './utils/registerServiceWorker';
-import App from './app/App.jsx';
+import App from './module/app/App.jsx';
 import './index.css';
 
 const store = configureStore();

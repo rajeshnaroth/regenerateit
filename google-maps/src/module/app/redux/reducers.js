@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
-import flockReducer from '../module/flock/flockReducer';
+import flock from '../../flock/redux/flockReducer';
 
 export default combineReducers({
-  flockReducer,
+  flock,
 });

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Col, Collapse, Form, FormGroup, Label, Input } from 'reactstrap';
+import PropTypes from 'prop-types';
 
-import { addFlock } from './flockApi';
+import { Button, Col, Collapse, Form, FormGroup, Label, Input } from 'reactstrap';
 
 function getFormInputs(state) {
   const { flockName, flockDescription, flockVertical, flockSize } = state;
@@ -28,7 +28,8 @@ class FlockForm extends React.Component {
   }
 
   addNewFlock() {
-    addFlock(getFormInputs(this.state));
+    this.props.addFlock(getFormInputs(this.state));
+    this.props.reloadFlockList();
   }
 
   render() {
@@ -91,5 +92,10 @@ class FlockForm extends React.Component {
     );
   }
 }
+
+FlockForm.propTypes = {
+  reloadFlockList: PropTypes.func.isRequired,
+  addFlock: PropTypes.func.isRequired,
+};
 
 export default FlockForm;

@@ -19,5 +19,4 @@ function addFlock(flock) {
   saveFlocks(currentFlocks);
 }
 
-
-export { loadFlocks, addFlock, saveFlocks };
+export { loadFlocks, saveFlocks, addFlock };
