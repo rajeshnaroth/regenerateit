@@ -1,17 +1,37 @@
-import { loadFlocks as loadFlocksApi, addFlock as addFlockApi } from '../api/flockApi';
-import { RELOAD_FLOCK_LIST } from './flockTypes';
+import {
+  loadFlock as loadFlockApi,
+  loadFlocks as loadFlocksApi,
+  upsertFlock as upsertFlockApi,
+  deleteFlock as deleteFlockApi,
+} from '../api/flockApi';
+import { RELOAD_FLOCK_LIST, LOAD_FLOCK } from './flockTypes';
 
-const loadFlocks = () => (dispatch) => dispatch({
-  type: RELOAD_FLOCK_LIST,
-  flockList: loadFlocksApi(),
-});
-
-const addFlock = (flock) => (dispatch) => {
-  addFlockApi(flock);
-  dispatch({
+const loadFlocks = () => (dispatch) => loadFlocksApi().then(
+  (flockList) => dispatch({
     type: RELOAD_FLOCK_LIST,
-    flockList: loadFlocksApi(),
-  });
-};
+    flockList,
+  }),
+);
 
-export { loadFlocks, addFlock };
+const loadFlock = (id) => (dispatch) => loadFlockApi(id).then(
+  (flock) => dispatch({
+    type: LOAD_FLOCK,
+    flock,
+  }),
+);
+
+const upsertFlock = (flock) => (dispatch) => upsertFlockApi(flock).then(
+  (flockList) => dispatch({
+    type: RELOAD_FLOCK_LIST,
+    flockList,
+  }),
+);
+
+const deleteFlock = (flock) => (dispatch) => deleteFlockApi(flock).then(
+  (flockList) => dispatch({
+    type: RELOAD_FLOCK_LIST,
+    flockList,
+  }),
+);
+
+export { loadFlock, loadFlocks, upsertFlock, deleteFlock };

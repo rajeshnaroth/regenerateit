@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
-import { Collapse, Table, Card, CardTitle, CardText } from 'reactstrap';
+import { Collapse, Table, Card, CardTitle, CardText, Button } from 'reactstrap';
 
-const FlockList = props => (
+const FlockList = (props) => (
   <div>
     <Collapse isOpen={props.flockList.length === 0}>
       <Card block>
@@ -24,11 +25,19 @@ const FlockList = props => (
         <tbody>
           {
             props.flockList.map((flock, index) => (
-              <tr>
+              <tr key={flock.id}>
                 <th scope="row">{index}</th>
                 <td>{flock.flockName}</td>
                 <td>{flock.flockVertical}</td>
                 <td>{flock.flockSize}</td>
+                <td>
+                  <Link to={`/flock/edit/${flock.id}`}>
+                    <Button> Edit </Button>
+                  </Link>
+                  <Link to={`/flock/delete/${flock.id}`}>
+                    <Button> Delete </Button>
+                  </Link>
+                </td>
               </tr>
             ))
           }

@@ -1,22 +1,81 @@
 /* global localStorage */
+import { head } from 'lodash/fp';
+import newId from '../../../utils/api';
+
 const tableName = 'flocks';
 
-function loadFlocks() {
-  try {
-    return JSON.parse(localStorage.getItem(tableName)) || [];
-  } catch (error) {
-    return [];
-  }
-}
+const loadFlocks = () => (
+  new Promise((resolve, reject) => {
+    try {
+      resolve(JSON.parse(localStorage.getItem(tableName)) || []);
+    } catch (error) {
+      reject('Bad JSON data in flock list');
+    }
+  })
+);
 
-function saveFlocks(flocks) {
-  localStorage.setItem(tableName, JSON.stringify(flocks));
-}
+const loadFlock = (id) => (
+  new Promise((resolve, reject) => {
+    try {
+      const intId = parseInt(id, 10);
+      const list = JSON.parse(localStorage.getItem(tableName)) || [];
+      resolve(head(list.filter((fl) => fl.id === intId)));
+    } catch (error) {
+      reject(`Flock ${id} not found`);
+    }
+  })
+);
 
-function addFlock(flock) {
-  const currentFlocks = loadFlocks();
-  currentFlocks.push(flock);
-  saveFlocks(currentFlocks);
-}
+const saveFlocks = (flocks) => (
+  new Promise((resolve, reject) => {
+    try {
+      localStorage.setItem(tableName, JSON.stringify(flocks));
+      resolve(flocks);
+    } catch (error) {
+      reject('Bad JSON data in flock list');
+    }
+  })
+);
 
-export { loadFlocks, saveFlocks, addFlock };
+// upsert
+const upsertFlock = (flock) => (
+  new Promise((resolve, reject) => {
+    loadFlocks().then((currentFlocks) => {
+      const newFlock = Object.assign(flock);
+      if (!newFlock.id) { // insert
+        newFlock.id = newId();
+        currentFlocks.push(newFlock);
+        resolve(saveFlocks(currentFlocks));
+      } else { // update
+        resolve(saveFlocks(
+          currentFlocks.map((cf) => {
+            if (cf.id === flock.id) {
+              return (flock);
+            }
+            return cf;
+          }),
+        ));
+      }
+    }).catch((err) => {
+      reject(err);
+    });
+  })
+);
+
+const deleteFlock = (flock) => (
+  new Promise((resolve, reject) => {
+    loadFlocks().then((currentFlocks) => {
+      resolve(saveFlocks(currentFlocks.filter((fl) => fl.id !== flock.id)));
+    }).catch((err) => {
+      reject(err);
+    });
+  })
+);
+
+export {
+  loadFlock,
+  loadFlocks,
+  saveFlocks,
+  upsertFlock,
+  deleteFlock,
+};

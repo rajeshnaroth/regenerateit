@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 
-import { loadFlocks, addFlock } from './flockActions';
+import { loadFlocks, loadFlock, upsertFlock, deleteFlock } from './flockActions';
 import Flock from '../Flock.jsx';
 
 const mapStateToProps = (state) => ({
@@ -9,7 +9,9 @@ const mapStateToProps = (state) => ({
 
 const mapDispatchToProps = (dispatch) => ({
   reloadFlockList: () => dispatch(loadFlocks()),
-  addFlock: (flock) => dispatch(addFlock(flock)),
+  loadFlock: (id) => dispatch(loadFlock(id)),
+  upsertFlock: (flock) => dispatch(upsertFlock(flock)),
+  deleteFlock: (flock) => dispatch(deleteFlock(flock)),
 });
 
 const FlockContainer = connect(mapStateToProps, mapDispatchToProps)(Flock);

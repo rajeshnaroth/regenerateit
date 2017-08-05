@@ -16,9 +16,7 @@ import './index.css';
 
 const store = configureStore();
 
-window.initMap = function initMap() {
-  // console.log('initMap');
-
+function startReact() {
   getLocaleTransition((messages, languageWithoutRegionCode) => {
     ReactDOM.render(
       <IntlProvider locale={languageWithoutRegionCode} messages={messages}>
@@ -26,5 +24,11 @@ window.initMap = function initMap() {
       </IntlProvider>, document.getElementById('root'));
     registerServiceWorker();
   });
-  // ReactDOM.render(<App />, document.getElementById('root'));
+}
+
+window.initMap = function initMap() {
+  // console.log('initMap');
+  // startReact();
 };
+
+startReact();

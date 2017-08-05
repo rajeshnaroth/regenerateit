@@ -7,7 +7,7 @@ const initialState = {
 const flock = (state = initialState, action) => {
   switch (action.type) {
     case RELOAD_FLOCK_LIST: {
-      // console.log('RELOAD_FLOCK_LIST');
+      // simple refresh, No reduction
       if (!action.flockList) {
         return initialState;
       }
@@ -17,7 +17,6 @@ const flock = (state = initialState, action) => {
     }
 
     default:
-      // console.log('default');
       return state;
   }
 };
