@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 
-import { Collapse, Table, Card, CardTitle, CardText, Button } from 'reactstrap';
+import { Collapse, Table, Card, CardTitle, CardText } from 'reactstrap';
 
 const FlockList = (props) => (
   <div>
@@ -25,19 +25,11 @@ const FlockList = (props) => (
         <tbody>
           {
             props.flockList.map((flock, index) => (
-              <tr key={flock.id}>
+              <tr key={flock.id} onClick={() => props.routeToInfo(flock.id)}>
                 <th scope="row">{index}</th>
                 <td>{flock.flockName}</td>
                 <td>{flock.flockVertical}</td>
                 <td>{flock.flockSize}</td>
-                <td>
-                  <Link to={`/flock/edit/${flock.id}`}>
-                    <Button> Edit </Button>
-                  </Link>
-                  <Link to={`/flock/delete/${flock.id}`}>
-                    <Button> Delete </Button>
-                  </Link>
-                </td>
               </tr>
             ))
           }
@@ -49,6 +41,9 @@ const FlockList = (props) => (
 
 FlockList.propTypes = {
   flockList: PropTypes.array.isRequired,
+  /* eslint-disable react/no-unused-prop-types */
+  routeToInfo: PropTypes.func.isRequired,
+  /* eslint-disable react/no-unused-prop-types */
 };
 
 export default FlockList;

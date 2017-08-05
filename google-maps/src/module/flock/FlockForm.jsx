@@ -79,16 +79,21 @@ class FlockForm extends React.Component {
           </FormGroup>
           <FormGroup>
             <Label for="flockDescription">Description</Label>
-            <Input type="textarea" name="flockDescription" id="flockDescription" placeholder="Flock Description..." />
+            <Input
+              type="textarea"
+              name="flockDescription"
+              id="flockDescription"
+              value={this.state.flockDescription}
+              onChange={(event) => this.handleInputChange('flockDescription', event.target.value)}
+              placeholder="Flock Description..."
+            />
           </FormGroup>
           <FormGroup>
             <Button
               color="primary"
               onClick={() => { this.saveFormData(); }}
             >{this.props.flockId ? 'Update Flock' : 'Add New Flock'}</Button>
-            <Button>
-              <Link to={'/flock/list'}>Cancel</Link>
-            </Button>
+            <Link to={'/flock/list'}><Button>Cancel</Button></Link>
           </FormGroup>
         </Form>
       </div>

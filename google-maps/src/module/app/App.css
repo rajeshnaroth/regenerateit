@@ -1,10 +1,5 @@
 .App {
-  
-}
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
 }
 
 .App-header {
@@ -18,9 +13,13 @@
   font-size: large;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.buttonHolder {
+  padding-top:0.5rem;
+  padding-bottom:0.5rem;
+}
+
+.buttonSpacer {
+  margin-right:0.5rem;
 }
 
 input {

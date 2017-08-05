@@ -10,8 +10,8 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   reloadFlockList: () => dispatch(loadFlocks()),
   loadFlock: (id) => dispatch(loadFlock(id)),
+  deleteFlock: (id) => dispatch(deleteFlock(id)),
   upsertFlock: (flock) => dispatch(upsertFlock(flock)),
-  deleteFlock: (flock) => dispatch(deleteFlock(flock)),
 });
 
 const FlockContainer = connect(mapStateToProps, mapDispatchToProps)(Flock);

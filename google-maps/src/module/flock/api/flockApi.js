@@ -62,10 +62,11 @@ const upsertFlock = (flock) => (
   })
 );
 
-const deleteFlock = (flock) => (
+const deleteFlock = (flockId) => (
   new Promise((resolve, reject) => {
     loadFlocks().then((currentFlocks) => {
-      resolve(saveFlocks(currentFlocks.filter((fl) => fl.id !== flock.id)));
+      const intId = parseInt(flockId, 10);
+      resolve(saveFlocks(currentFlocks.filter((fl) => fl.id !== intId)));
     }).catch((err) => {
       reject(err);
     });

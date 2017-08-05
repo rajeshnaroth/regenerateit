@@ -11,6 +11,8 @@ import {
 
 import FlockList from './FlockList.jsx';
 import FlockForm from './FlockForm.jsx';
+import FlockInfo from './FlockInfo.jsx';
+import FlockDelete from './FlockDelete.jsx';
 
 class Flock extends React.Component {
   constructor(props) {
@@ -23,15 +25,30 @@ class Flock extends React.Component {
   render() {
     function getFlockEditForm(componentProps, routeProps) {
       return (<FlockForm
-        reloadFlockList={componentProps.reloadFlockList}
+        flockId={routeProps.match.params.id}
         loadFlock={componentProps.loadFlock}
         upsertFlock={componentProps.upsertFlock}
-        flockId={routeProps.match.params.id}
         routeBackToListing={() => routeProps.history.push('/flock/list')}
       />);
     }
 
-    function getFlockList(componentProps) {
+    function getFlockDeleteForm(componentProps, routeProps) {
+      return (<FlockDelete
+        flockId={routeProps.match.params.id}
+        loadFlock={componentProps.loadFlock}
+        deleteFlock={componentProps.deleteFlock}
+        routeBackToListing={() => routeProps.history.push('/flock/list')}
+      />);
+    }
+
+    function getFlockInfo(componentProps, routeProps) {
+      return (<FlockInfo
+        flockId={routeProps.match.params.id}
+        loadFlock={componentProps.loadFlock}
+      />);
+    }
+
+    function getFlockList(componentProps, routeProps) {
       return (
         <div>
           <Form>
@@ -41,7 +58,10 @@ class Flock extends React.Component {
               </Button>
             </Link>
           </Form>
-          <FlockList flockList={componentProps.flockList} />
+          <FlockList
+            flockList={componentProps.flockList}
+            routeToInfo={(id) => routeProps.history.push(`/flock/info/${id}`)}
+          />
         </div>
       );
     }
@@ -53,9 +73,10 @@ class Flock extends React.Component {
           <Switch>
             <Route path="/flock/edit/:id" render={(routeProps) => getFlockEditForm(this.props, routeProps)} />
             <Route path="/flock/edit" render={(routeProps) => getFlockEditForm(this.props, routeProps)} />
-
-            <Route path="/flock" render={() => getFlockList(this.props)} />
-            <Route path="/flock/list" render={() => getFlockList(this.props)} />
+            <Route path="/flock/info/:id" render={(routeProps) => getFlockInfo(this.props, routeProps)} />
+            <Route path="/flock/delete/:id" render={(routeProps) => getFlockDeleteForm(this.props, routeProps)} />
+            <Route path="/flock" render={(routeProps) => getFlockList(this.props, routeProps)} />
+            <Route path="/flock/list" render={(routeProps) => getFlockList(this.props, routeProps)} />
           </Switch>
 
         </Container>
